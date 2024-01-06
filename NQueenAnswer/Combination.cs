@@ -14,7 +14,6 @@
 #pragma warning disable CS8602 // null 参照の可能性があるものの逆参照です。
             var unused = withRepetition ? items : items.SkipWhile(e => !e.Equals(item)).Skip(1).ToList();
 #pragma warning restore CS8602 // null 参照の可能性があるものの逆参照です。
-
             foreach(var rightside in Enumerate(unused, k - 1, withRepetition)) {
                 yield return leftside.Concat(rightside).ToArray();
             }
