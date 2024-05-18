@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Text;
 
 namespace NQueenAnswer {
     /// <summary>
@@ -10,7 +9,7 @@ namespace NQueenAnswer {
         /// <summary>
         /// 解の座標の組
         /// </summary>
-        public List<Point> Points { get; set; }
+        public List<Point> Points { get; private set; }
 
         /// コンストラクタ
         /// <summary>
@@ -24,9 +23,6 @@ namespace NQueenAnswer {
             foreach(var point in points) {
                 Points.Add(new Point(point.X, point.Y));
             }
-        }
-
-        public Solution() {
         }
     }
 }

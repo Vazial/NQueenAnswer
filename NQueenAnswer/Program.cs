@@ -42,36 +42,24 @@ namespace NQueenAnswer {
         }
 
         /// <summary>
-        /// 座標の組み合わせを生成する。(1行に2個以上クイーンが存在する組は省く。)
+        /// 全ての座標の組み合わせを生成する。(1行に2個以上クイーンが存在する組は省く。)
         /// </summary>
         private static List<Solution> CreateAllCombinations() {
 
-            var allComb = new List<Solution>();
+            var allCombs = new List<Solution>();
+            var disit = new int[N];
             var tmpPoints = new Point[N];
-            var nextX = new int[N];
 
-            for(int pindex = 1; pindex <= N; pindex++) {
-                tmpPoints[pindex - 1] = new Point(1, pindex);
-                nextX[pindex - 1] = pindex % N;
-            }
-
-            for(int index = 1; index <= (int)Math.Pow(N, N); index++) {
-
-                allComb.Add(new Solution(tmpPoints.ToList()));
-
-                //次に追加する座標の組を生成する。
-                var tmpIndex = index;
-                var moveCount = 0;
-                while(moveCount < N) {
-                    tmpPoints[N - moveCount - 1].X = nextX[tmpPoints[N - moveCount - 1].X - 1] + 1;
-                    moveCount++;
-                    if(tmpIndex % N != 0) {
-                        break;
-                    }
-                    tmpIndex /= N;
+            for (var ii = 0; ii < (int)Math.Pow(N, N); ++ii){
+                for (var tmpRow = 1; tmpRow <= N; tmpRow++){
+                    disit[tmpRow - 1] = (ii / (int)Math.Pow(N, N - tmpRow) % N) + 1;
+                    tmpPoints[tmpRow - 1].X = disit[tmpRow - 1];
+                    tmpPoints[tmpRow - 1].Y = tmpRow;
                 }
+                allCombs.Add(new Solution(tmpPoints.ToList()));
             }
-            return allComb;
+            
+            return allCombs;
         }
 
         /// <summary>
@@ -83,8 +71,8 @@ namespace NQueenAnswer {
 
             //Pointsの中から2つの座標を選んで、適当かどうかチェックする。(N > q > r >= 0)
             var solArray = solution.Points.ToArray();
-            for(int former = 1; former <= N - 1; former++) {
-                for(int latter = 0; latter < former; latter++) {
+            for(var former = 1; former <= N - 1; former++) {
+                for(var latter = 0; latter < former; latter++) {
                     var diff = former - latter;
                     if(solArray[former].X == solArray[latter].X           //同じ列に存在しないかチェック
                     || solArray[former].X == solArray[latter].X - diff    //左斜め前に存在しないかチェック
@@ -120,7 +108,7 @@ namespace NQueenAnswer {
                 }
 
                 //行末で改行する。
-                for(int row = N; row >= 1; row--) {
+                for(var row = N; row >= 1; row--) {
                     sbSolution.Insert(row * N, '\n');
                 }
 
@@ -134,6 +122,5 @@ namespace NQueenAnswer {
 
             Console.WriteLine(sbAllSolutions);
         }
-
     }
 }
