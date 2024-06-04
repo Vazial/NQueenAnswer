@@ -47,16 +47,20 @@ namespace NQueenAnswer {
         private static List<Solution> CreateAllCombinations() {
 
             var allCombs = new List<Solution>();
-            var disit = new int[N];
-            var tmpPoints = new Point[N];
+            var points = new Point[N];
 
-            for (var ii = 0; ii < (int)Math.Pow(N, N); ++ii){
-                for (var tmpRow = 1; tmpRow <= N; tmpRow++){
-                    disit[tmpRow - 1] = (ii / (int)Math.Pow(N, N - tmpRow) % N) + 1;
-                    tmpPoints[tmpRow - 1].X = disit[tmpRow - 1];
-                    tmpPoints[tmpRow - 1].Y = tmpRow;
+            // Solution(N個のQueenのバリエーション(配置))の取りうる値を列挙する
+            for (var ii = 0; ii < (int)Math.Pow(N, N); ++ii) {
+                // Solution1つに対してN個Queenを配置する
+                for (var tmpRow = 0; tmpRow < N; tmpRow++){
+                    // X行のQueenの位置について考える(1～N行)
+                    int seekX = (int)Math.Pow(N, N - (tmpRow + 1));
+
+                    // Queenの座標を求める
+                    points[tmpRow].X = ((ii / seekX) % N) + 1;
+                    points[tmpRow].Y = tmpRow + 1;
                 }
-                allCombs.Add(new Solution(tmpPoints.ToList()));
+                allCombs.Add(new Solution(points.ToList()));
             }
             
             return allCombs;
@@ -74,12 +78,9 @@ namespace NQueenAnswer {
             for(var former = 1; former <= N - 1; former++) {
                 for(var latter = 0; latter < former; latter++) {
                     var diff = former - latter;
-                    if(solArray[former].X == solArray[latter].X           //同じ列に存在しないかチェック
-                    || solArray[former].X == solArray[latter].X - diff    //左斜め前に存在しないかチェック
-                    || solArray[former].X == solArray[latter].X + diff    //右斜め前存在しにないかチェック
-                    ) {
-                        return false;
-                    }
+                    if (solArray[former].X == solArray[latter].X) { return false; };           //同じ列に存在しないかチェック
+                    if (solArray[former].X == solArray[latter].X - diff) { return false; };    //左斜め前に存在しないかチェック
+                    if (solArray[former].X == solArray[latter].X + diff) { return false; };    //右斜め前存在しにないかチェック
                 }
             }
 
