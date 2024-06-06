@@ -42,7 +42,7 @@ namespace NQueenAnswer
         {
 
             //Pointsの中から2つの座標を選んで、適当かどうかチェックする。(N > q > r >= 0)
-            var solArray = solution.locations.ToArray();
+            var solArray = solution.getLocations().ToArray();
             for (var former = 1; former <= solution.size - 1; former++)
             {
                 for (var latter = 0; latter < former; latter++)

@@ -9,27 +9,48 @@ namespace NQueenAnswer
     public class Chessboard
     {
         public int size { get; private set; }
-        public List<Queen> locations;
+        public Layout layout {  get; private set; }
 
         public Chessboard(int N) 
         { 
             size = N;
-            locations = new List<Queen>();
+            layout = new Layout(Layout.Empty);
         }
 
         public void Mapping(int serialNumber)
         {
-            var layout = new Layout(serialNumber);
-            locations = layout.Deserialize(size);
+            layout = new Layout(serialNumber);
         }
 
         public List<Queen> getLocations()
         {
-            if (locations.Count == 0)
+            return layout.Deserialize(size);
+        }
+
+        public void RotateRight()
+        {
+            var newLocations = new List<Queen>();
+
+            foreach (var location in layout.Deserialize(size))
             {
-                throw new MissingFieldException("locations is Empty. >> call Mapping()");
+                var newLocation = new Queen(size - (location.y + 1), location.x);
+                newLocations.Add(newLocation);
             }
-            return locations;
+
+            layout = new Layout(newLocations, size);
+        }
+
+        public void InvertMirror()
+        {
+            var newLocations = new List<Queen>();
+
+            foreach (var location in layout.Deserialize(size))
+            {
+                var newLocation = new Queen(size - (location.x + 1), location.y);
+                newLocations.Add(newLocation);
+            }
+
+            layout = new Layout(newLocations, size);
         }
     }
 }
