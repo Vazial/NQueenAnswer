@@ -9,7 +9,7 @@ namespace NQueenAnswer
 {
     public class ChessboardDebugPrinter : IChessboardPrintProvider
     {
-        public void Print(List<Chessboard> chessboards)
+        public void PrintAll(List<Chessboard> chessboards)
         {
             //解の個数を表示する。
             Console.WriteLine("Total : " + chessboards.Count);

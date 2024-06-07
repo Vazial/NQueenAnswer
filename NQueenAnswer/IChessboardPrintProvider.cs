@@ -8,6 +8,6 @@ namespace NQueenAnswer
 {
     public interface IChessboardPrintProvider
     {
-        void Print(Chessboard chessboard);
+        public void PrintAll(List<Chessboard> chessboards);
     }
 }

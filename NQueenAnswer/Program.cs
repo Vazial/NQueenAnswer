@@ -25,7 +25,7 @@ namespace NQueenAnswer {
             var solutionList = NQueenGenerator.Generate(N);
 
             //解を出力する。
-            new ChessboardDebugPrinter().Print(solutionList);
+            new ChessboardDebugPrinter().PrintAll(solutionList);
 
             sw.Stop();
 

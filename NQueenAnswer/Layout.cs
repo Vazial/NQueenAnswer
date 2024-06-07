@@ -11,7 +11,7 @@ namespace NQueenAnswer
     {
         public static readonly int Empty = -1;
 
-        private int serialNumber;
+        private readonly int serialNumber;
 
         public Layout(int serialNumber)
         {
@@ -27,16 +27,20 @@ namespace NQueenAnswer
         {
             if (serialNumber == Empty)
             {
-                throw new MissingFieldException("locations is Empty. >> call Mapping()");
+                throw new MissingFieldException("locations is Empty.");
             }
             return serialNumber;
         }
 
         public List<Queen> Deserialize(int cardinalNumber)
         {
-            return Deserialize(this.serialNumber, cardinalNumber);
+            return Deserialize(getSerialNumber(), cardinalNumber);
         }
 
+        public bool Equals(Layout layout)
+        {
+            return (this.getSerialNumber() == layout.getSerialNumber());
+        }
 
         public static List<Queen> Deserialize(int serialNumber, int cardinalNumber)
         {
