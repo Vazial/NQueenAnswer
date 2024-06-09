@@ -42,10 +42,10 @@ namespace NQueenAnswer
         }
 
         /// <summary>
-        /// 座標の組が条件を満たすか判定する。
+        /// NQueenの解として適切であるか判定する。
         /// </summary>
-        /// <param name="solution">座標の組</param>
-        /// <returns></returns>
+        /// <param name="solution">NQueen座標の組</param>
+        /// <returns>NQueenの解として適切であればtrue</returns>
         private static bool IsMatch(Chessboard solution)
         {
 
@@ -73,7 +73,7 @@ namespace NQueenAnswer
         /// NQueenの解から重複を削除する（回転・反転で一致するもの）
         /// </summary>
         /// <param name="solutionList">NQueenの解のリスト</param>
-        /// <returns></returns>
+        /// <returns>重複を削除したNQueenの解のリスト</returns>
         public static List<Chessboard> DeleteDuplicate(List<Chessboard> solutionList)
         {
             var checkedSolutions = new List<Chessboard>();
