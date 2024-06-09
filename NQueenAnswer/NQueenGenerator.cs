@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace NQueenAnswer
 {
+    /// <summary>
+    /// NQueenの解を生成するサービスクラス
+    /// </summary>
     public static class NQueenGenerator
     {
+        /// <summary>
+        /// NQueenの解となる座標を生成する
+        /// </summary>
+        /// <param name="nn">N</param>
+        /// <returns>NQueenの解のリスト</returns>
         public static List<Chessboard> Generate(int nn)
         {
             var numberCombinationsList = new List<Chessboard>();
@@ -42,7 +50,7 @@ namespace NQueenAnswer
         {
 
             //Pointsの中から2つの座標を選んで、適当かどうかチェックする。(N > q > r >= 0)
-            var solArray = solution.getLocations().ToArray();
+            var solArray = solution.GetLocations().ToArray();
             for (var former = 1; former <= solution.size - 1; former++)
             {
                 for (var latter = 0; latter < former; latter++)
@@ -59,6 +67,67 @@ namespace NQueenAnswer
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// NQueenの解から重複を削除する（回転・反転で一致するもの）
+        /// </summary>
+        /// <param name="solutionList">NQueenの解のリスト</param>
+        /// <returns></returns>
+        public static List<Chessboard> DeleteDuplicate(List<Chessboard> solutionList)
+        {
+            var checkedSolutions = new List<Chessboard>();
+
+            foreach (var solution2 in solutionList)
+            {
+                var isDuplicate = false;
+                foreach (var solution1 in checkedSolutions)
+                {
+                    if (IsEqual(solution1, solution2))
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (isDuplicate == false)
+                {
+                    checkedSolutions.Add(solution2);
+                }
+            }
+            return checkedSolutions;
+        }
+
+        /// <summary>
+        /// NQueenの解を回転・反転させ、一致しているか判定する
+        /// </summary>
+        /// <param name="solution1">比較される解</param>
+        /// <param name="solution2">比較する解</param>
+        /// <returns>一致しているかどうか</returns>
+        private static bool IsEqual(Chessboard solution1, Chessboard solution2)
+        {
+            // 上下左右
+            const int Direction = 4;
+
+            var rotateSolution = solution2.Copy();
+
+            for (int direction = 0; direction < Direction; ++direction)
+            {
+                rotateSolution.RotateRight();
+                if (solution1.Equals(rotateSolution))
+                {
+                    return true;
+                }
+
+                var invertSolution = rotateSolution.Copy();
+                invertSolution.InvertMirror();
+                if (solution1.Equals(invertSolution))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

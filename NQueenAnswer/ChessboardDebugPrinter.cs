@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace NQueenAnswer
 {
-    public class ChessboardDebugPrinter : IChessboardPrintProvider
+    /// <summary>
+    /// NQueenの解をデバッグ出力するサービスクラス
+    /// </summary>
+    public static class ChessboardDebugPrinter
     {
-        public void PrintAll(List<Chessboard> chessboards)
+        public static void PrintAll(List<Chessboard> chessboards)
         {
             //解の個数を表示する。
             Console.WriteLine("Total : " + chessboards.Count);
@@ -23,9 +26,9 @@ namespace NQueenAnswer
             }
         }
 
-        public void Print(Chessboard chessboard)
+        public static void Print(Chessboard chessboard)
         {
-            var locations = chessboard.getLocations();
+            var locations = chessboard.GetLocations();
 
             foreach (var location in locations)
             {

@@ -25,11 +25,16 @@ namespace NQueenAnswer {
             var solutionList = NQueenGenerator.Generate(N);
 
             //解を出力する。
-            new ChessboardDebugPrinter().PrintAll(solutionList);
+            ChessboardDebugPrinter.PrintAll(solutionList);
 
             sw.Stop();
 
             Console.WriteLine("経過時間: " + sw.Elapsed.ToString("hh':'mm':'ss'.'fff"));
+
+            //重複を削除した場合
+            Console.WriteLine();
+            Console.WriteLine("重複を削除した場合");
+            ChessboardDebugPrinter.PrintAll(NQueenGenerator.DeleteDuplicate(solutionList));
         }
     }
 }
