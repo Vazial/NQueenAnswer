@@ -1,0 +1,399 @@
+@{
+    ViewData["Title"] = "Class Structure - N-Queen Problem";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .class-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .class-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        .code-example {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        .property-list {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .method-list {
+            background-color: #d1ecf1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .class-diagram {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .uml-class {
+            border: 2px solid #333;
+            background-color: white;
+            margin: 10px;
+            border-radius: 5px;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .class-name {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .class-properties {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            background-color: #f9f9f9;
+        }
+        .class-methods {
+            padding: 10px;
+            background-color: #fff;
+        }
+        .property-item, .method-item {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 2px 0;
+            color: #333;
+        }
+        .relationship-arrow {
+            font-size: 24px;
+            color: #007bff;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        .arrow-label {
+            font-size: 12px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .diagram-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>クラス構造の説明</h1>
+        
+        <div class="navigation">
+            <a href="/Home/Index" class="nav-button">メインページ</a>
+            <a href="/Home/Tutorial" class="nav-button">チュートリアル</a>
+            <a href="/Home/BruteForceDemo" class="nav-button">アルゴリズムデモ</a>
+            <a href="/Home/SequenceDiagram" class="nav-button">フローチャート</a>
+        </div>
+
+        <h2>プロジェクト全体の構造</h2>
+        <div class="class-diagram">
+            <!-- NQueenGenerator クラス -->
+            <div class="diagram-row">
+                <div class="uml-class">
+                    <div class="class-name">NQueenGenerator</div>
+                    <div class="class-properties">
+                        <div class="property-item">《static class》</div>
+                    </div>
+                    <div class="class-methods">
+                        <div class="method-item">+ Generate(int nn): List&lt;Chessboard&gt;</div>
+                        <div class="method-item">+ DeleteDuplicate(List&lt;Chessboard&gt;): List&lt;Chessboard&gt;</div>
+                        <div class="method-item">- IsMatch(Chessboard): bool</div>
+                        <div class="method-item">- IsEqual(Chessboard, Chessboard): bool</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relationship-arrow">
+                <div class="arrow-label">uses</div>
+                <div>↓</div>
+            </div>
+
+            <!-- Chessboard クラス -->
+            <div class="diagram-row">
+                <div class="uml-class">
+                    <div class="class-name">Chessboard</div>
+                    <div class="class-properties">
+                        <div class="property-item">+ size: int</div>
+                        <div class="property-item">+ layout: Layout</div>
+                    </div>
+                    <div class="class-methods">
+                        <div class="method-item">+ Chessboard(int N)</div>
+                        <div class="method-item">+ Mapping(int serialNumber): void</div>
+                        <div class="method-item">+ GetLocations(): List&lt;Queen&gt;</div>
+                        <div class="method-item">+ RotateRight(): void</div>
+                        <div class="method-item">+ InvertMirror(): void</div>
+                        <div class="method-item">+ Copy(): Chessboard</div>
+                        <div class="method-item">+ Equals(Chessboard): bool</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relationship-arrow">
+                <div class="arrow-label">contains</div>
+                <div>↓</div>
+            </div>
+
+            <!-- Layout クラス -->
+            <div class="diagram-row">
+                <div class="uml-class">
+                    <div class="class-name">Layout</div>
+                    <div class="class-properties">
+                        <div class="property-item">- serialNumber: int</div>
+                        <div class="property-item">+ Empty: static readonly int</div>
+                    </div>
+                    <div class="class-methods">
+                        <div class="method-item">+ Layout(int serialNumber)</div>
+                        <div class="method-item">+ Layout(List&lt;Queen&gt;, int cardinalNumber)</div>
+                        <div class="method-item">+ GetSerialNumber(): int</div>
+                        <div class="method-item">+ Deserialize(int cardinalNumber): List&lt;Queen&gt;</div>
+                        <div class="method-item">+ Serialize(List&lt;Queen&gt;, int): static int</div>
+                        <div class="method-item">+ Equals(Layout): bool</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relationship-arrow">
+                <div class="arrow-label">manages</div>
+                <div>↓</div>
+            </div>
+
+            <!-- Queen クラス -->
+            <div class="diagram-row">
+                <div class="uml-class">
+                    <div class="class-name">Queen</div>
+                    <div class="class-properties">
+                        <div class="property-item">+ x: int</div>
+                        <div class="property-item">+ y: int</div>
+                    </div>
+                    <div class="class-methods">
+                        <div class="method-item">+ Queen(int xx, int yy)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="class-section">
+            <div class="class-title">1. Queen クラス</div>
+            <p><strong>役割：</strong> チェス盤上のクイーンの座標を表現する最も基本的なクラス</p>
+            
+            <div class="property-list">
+                <strong>プロパティ：</strong>
+                <ul>
+                    <li><code>int x</code> - X座標（列）</li>
+                    <li><code>int y</code> - Y座標（行）</li>
+                </ul>
+            </div>
+
+            <div class="method-list">
+                <strong>メソッド：</strong>
+                <ul>
+                    <li><code>Queen(int xx, int yy)</code> - コンストラクタ</li>
+                </ul>
+            </div>
+
+            <div class="code-example">
+// 使用例
+var queen = new Queen(2, 3); // X=2, Y=3の位置にクイーンを配置
+Console.WriteLine($"クイーンの位置: ({queen.x}, {queen.y})");
+            </div>
+
+            <div class="highlight">
+                <strong>設計のポイント：</strong> シンプルな座標データを保持するだけの軽量なクラス。不変オブジェクトとして設計されている。
+            </div>
+        </div>
+
+        <div class="class-section">
+            <div class="class-title">2. Layout クラス</div>
+            <p><strong>役割：</strong> チェス盤上のクイーンの配置情報を管理し、シリアル化・デシリアル化を行う</p>
+            
+            <div class="property-list">
+                <strong>プロパティ：</strong>
+                <ul>
+                    <li><code>int serialNumber</code> - クイーンの位置を表現する一意な値</li>
+                    <li><code>static readonly int Empty</code> - 空の配置を表す定数(-1)</li>
+                </ul>
+            </div>
+
+            <div class="method-list">
+                <strong>主要メソッド：</strong>
+                <ul>
+                    <li><code>Layout(int serialNumber)</code> - シリアル番号からの構築</li>
+                    <li><code>Layout(List&lt;Queen&gt; locations, int cardinalNumber)</code> - クイーンリストからの構築</li>
+                    <li><code>List&lt;Queen&gt; Deserialize(int cardinalNumber)</code> - シリアル番号をクイーンリストに変換</li>
+                    <li><code>static int Serialize(List&lt;Queen&gt; locations, int cardinalNumber)</code> - クイーンリストをシリアル番号に変換</li>
+                </ul>
+            </div>
+
+            <div class="code-example">
+// シリアル化の仕組み（N=4の場合）
+// クイーンの位置 [(0,0), (2,1), (1,2), (3,3)] 
+// → シリアル番号 = 0×4⁰ + 2×4¹ + 1×4² + 3×4³ = 0 + 8 + 16 + 192 = 216
+
+var queens = new List&lt;Queen&gt; { 
+    new Queen(0, 0), new Queen(2, 1), 
+    new Queen(1, 2), new Queen(3, 3) 
+};
+var layout = new Layout(queens, 4);
+            </div>
+
+            <div class="highlight">
+                <strong>設計のポイント：</strong> N進数を使ってクイーンの配置を一意の整数で表現。これにより再帰など高度な手段を使わずに実現可能。
+        </div>
+
+        <div class="class-section">
+            <div class="class-title">3. Chessboard クラス</div>
+            <p><strong>役割：</strong> チェス盤全体を表現し、クイーンの配置操作や変換処理を提供</p>
+            
+            <div class="property-list">
+                <strong>プロパティ：</strong>
+                <ul>
+                    <li><code>int size</code> - チェス盤のサイズ（N×N）</li>
+                    <li><code>Layout layout</code> - クイーンの配置情報</li>
+                </ul>
+            </div>
+
+            <div class="method-list">
+                <strong>主要メソッド：</strong>
+                <ul>
+                    <li><code>Chessboard(int N)</code> - コンストラクタ</li>
+                    <li><code>void Mapping(int serialNumber)</code> - シリアル番号でクイーンを配置</li>
+                    <li><code>List&lt;Queen&gt; GetLocations()</code> - クイーンの位置を取得</li>
+                    <li><code>void RotateRight()</code> - 右に90度回転</li>
+                    <li><code>void InvertMirror()</code> - 左右反転</li>
+                    <li><code>Chessboard Copy()</code> - チェス盤のコピーを作成</li>
+                </ul>
+            </div>
+            <div class="highlight">
+                <strong>設計のポイント：</strong> チェス盤の操作（回転・反転）を提供し、重複解の除去に使用される。
+            </div>
+        </div>
+
+        <div class="class-section">
+            <div class="class-title">4. NQueenGenerator クラス</div>
+            <p><strong>役割：</strong> N-Queen問題の解を生成する中心的なロジックを提供する静的クラス</p>
+            
+            <div class="method-list">
+                <strong>主要メソッド：</strong>
+                <ul>
+                    <li><code>static List&lt;Chessboard&gt; Generate(int nn)</code> - すべての解を生成</li>
+                    <li><code>static List&lt;Chessboard&gt; DeleteDuplicate(List&lt;Chessboard&gt; solutionList)</code> - 重複解を除去</li>
+                    <li><code>static bool IsMatch(Chessboard solution)</code> - 解が有効かチェック</li>
+                    <li><code>static bool IsEqual(Chessboard solution1, Chessboard solution2)</code> - 2つの解が同等かチェック</li>
+                </ul>
+            </div>
+            <div class="highlight">
+                <strong>設計のポイント：</strong> 総当たり法でN^N通りの配置を生成し、制約チェックで有効解を抽出。その後、回転・反転による重複を除去。
+            </div>
+        </div>
+
+        <h2>クラス間の関係性</h2>
+        <div class="class-section">
+            <div class="step-title">データフローと依存関係</div>
+            
+            <ol>
+                <li><strong>NQueenGenerator</strong> が解の生成を開始</li>
+                <li><strong>Chessboard</strong> インスタンスを大量に作成</li>
+                <li>各 <strong>Chessboard</strong> は <strong>Layout</strong> を持つ</li>
+                <li><strong>Layout</strong> は複数の <strong>Queen</strong> を管理</li>
+                <li>制約チェックと重複除去を経て最終解を出力</li>
+            </ol>
+
+            <div class="highlight">
+                <strong>アーキテクチャの特徴：</strong>
+                <ul>
+                    <li><strong>分離された責任：</strong> 各クラスが明確な役割を持つ</li>
+                    <li><strong>効率的なデータ表現：</strong> シリアル化による省メモリ設計</li>
+                    <li><strong>変換処理の抽象化：</strong> 回転・反転処理の隠蔽</li>
+                    <li><strong>静的メソッドの活用：</strong> ユーティリティ機能の提供</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="/Home/Index" class="nav-button">メインページで実際に試す</a>
+            <a href="/Home/Tutorial" class="nav-button">チュートリアルに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

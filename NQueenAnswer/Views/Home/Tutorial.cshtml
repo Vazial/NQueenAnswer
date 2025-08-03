@@ -1,0 +1,297 @@
+@{
+    ViewData["Title"] = "N-Queen Problem Tutorial";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .step {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .chessboard {
+            display: inline-block;
+            margin: 10px;
+            border: 2px solid #333;
+        }
+        .chessboard table {
+            border-collapse: collapse;
+        }
+        .chessboard td {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 24px;
+            border: 1px solid #666;
+        }
+        .white {
+            background-color: #f0d9b5;
+        }
+        .black {
+            background-color: #b58863;
+        }
+        .queen {
+            color: #d4af37;
+            font-weight: bold;
+        }
+        .attack-line {
+            background-color: #ffcccc !important;
+        }
+        .safe-square {
+            background-color: #ccffcc !important;
+        }
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        .code-example {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>N-Queen Problem Tutorial</h1>
+        
+        <div class="navigation">
+            <a href="/Home/Index" class="nav-button">メインページに戻る</a>
+            <a href="/Home/ClassStructure" class="nav-button">クラス構造を見る</a>
+            <a href="/Home/BruteForceDemo" class="nav-button">アルゴリズムデモ</a>
+            <a href="/Home/SequenceDiagram" class="nav-button">フローチャート</a>
+        </div>
+
+        <h2>N-Queen問題とは？</h2>
+        <div class="step">
+            <div class="step-title">問題の概要</div>
+            <p>N-Queen問題は、N×Nのチェス盤にN個のクイーンを配置する問題です。</p>
+            <p>クイーンは縦・横・斜めの全方向に移動できるため、<strong>どのクイーンも他のクイーンに攻撃されない位置</strong>に配置する必要があります。</p>
+            
+            <div class="highlight">
+                <strong>ルール：</strong> すべてのクイーンが互いに攻撃し合わない位置に配置されていること
+            </div>
+        </div>
+
+        <h2>ステップ1: 4×4チェス盤での例</h2>
+        <div class="step">
+            <div class="step-title">正しい解の例</div>
+            <p>4×4のチェス盤に4個のクイーンを配置する場合の正しい解：</p>
+            
+            <div class="chessboard">
+                <table>
+                    <tr>
+                        <td class="black"></td>
+                        <td class="white"><span class="queen">♛</span></td>
+                        <td class="black"></td>
+                        <td class="white"></td>
+                    </tr>
+                    <tr>
+                        <td class="white"></td>
+                        <td class="black"></td>
+                        <td class="white"></td>
+                        <td class="black"><span class="queen">♛</span></td>
+                    </tr>
+                    <tr>
+                        <td class="black"><span class="queen">♛</span></td>
+                        <td class="white"></td>
+                        <td class="black"></td>
+                        <td class="white"></td>
+                    </tr>
+                    <tr>
+                        <td class="white"></td>
+                        <td class="black"></td>
+                        <td class="white"><span class="queen">♛</span></td>
+                        <td class="black"></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <p>この配置では、どのクイーンも他のクイーンを攻撃していません。</p>
+        </div>
+
+        <h2>ステップ2: 攻撃パターンの理解</h2>
+        <div class="step">
+            <div class="step-title">クイーンの攻撃範囲</div>
+            <p>クイーンは以下の方向に攻撃できます：</p>
+            <ul>
+                <li><strong>縦方向</strong>：同じ列のすべてのマス</li>
+                <li><strong>横方向</strong>：同じ行のすべてのマス</li>
+                <li><strong>斜め方向</strong>：両方の対角線上のすべてのマス</li>
+            </ul>
+            
+            <div class="chessboard">
+                <table>
+                    <tr>
+                        <td class="attack-line black"></td>
+                        <td class="attack-line white"></td>
+                        <td class="attack-line black"></td>
+                        <td class="attack-line white"></td>
+                    </tr>
+                    <tr>
+                        <td class="attack-line white"></td>
+                        <td class="white"><span class="queen">♛</span></td>
+                        <td class="attack-line black"></td>
+                        <td class="attack-line white"></td>
+                    </tr>
+                    <tr>
+                        <td class="attack-line black"></td>
+                        <td class="attack-line white"></td>
+                        <td class="attack-line black"></td>
+                        <td class="attack-line white"></td>
+                    </tr>
+                    <tr>
+                        <td class="attack-line white"></td>
+                        <td class="attack-line black"></td>
+                        <td class="attack-line white"></td>
+                        <td class="attack-line black"></td>
+                    </tr>
+                </table>
+            </div>
+            <p>赤いマスは、中央のクイーンが攻撃できる範囲を示しています。</p>
+        </div>
+
+        <h2>ステップ3: 解法のアルゴリズム</h2>
+        <div class="step">
+            <div class="step-title">このプログラムの解法</div>
+            <p>このプログラムでは以下の手順で解を求めています：</p>
+            
+            <ol>
+                <li><strong>全組み合わせ生成</strong>：N^N通りのすべての配置パターンを生成</li>
+                <li><strong>制約チェック</strong>：各パターンがN-Queen問題の制約を満たすかチェック</li>
+                <li><strong>重複除去</strong>：回転・反転で同じになる解を除去</li>
+            </ol>
+            
+            <div class="code-example">
+// 制約チェックの例（簡略化）
+for (var former = 1; former <= solution.size - 1; former++)
+{
+    for (var latter = 0; latter < former; latter++)
+    {
+        var diff = former - latter;
+        if (solArray[former].x == solArray[latter].x           // 同じ列
+        || solArray[former].x == solArray[latter].x - diff    // 左斜め  
+        || solArray[former].x == solArray[latter].x + diff)   // 右斜め
+        {
+            return false; // 制約違反
+        }
+    }
+}
+            </div>
+        </div>
+
+        <h2>ステップ4: 解の数について</h2>
+        <div class="step">
+            <div class="step-title">Nの値と解の数</div>
+            <p>N-Queen問題の解の数は、Nの値によって大きく変わります：</p>
+            
+            <table style="border-collapse: collapse; width: 100%; margin: 15px 0;">
+                <tr style="background-color: #007bff; color: white;">
+                    <th style="border: 1px solid #ddd; padding: 8px;">N</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">全ての解</th>
+                    <th style="border: 1px solid #ddd; padding: 8px;">重複除去後</th>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">4</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">2</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">1</td>
+                </tr>
+                <tr style="background-color: #f9f9f9;">
+                    <td style="border: 1px solid #ddd; padding: 8px;">5</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">10</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">2</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">6</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">4</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">1</td>
+                </tr>
+                <tr style="background-color: #f9f9f9;">
+                    <td style="border: 1px solid #ddd; padding: 8px;">8</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">92</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">12</td>
+                </tr>
+            </table>
+            
+            <div class="highlight">
+                <strong>注意：</strong> Nが大きくなると計算時間が急激に増加します。このプログラムでは最大N=10まで対応しています。
+            </div>
+        </div>
+
+        <h2>ステップ5: 実際に試してみよう</h2>
+        <div class="step">
+            <div class="step-title">プログラムを使ってみる</div>
+            <p>理解が深まったところで、実際にプログラムを使ってN-Queen問題を解いてみましょう：</p>
+            
+            <ol>
+                <li>メインページに戻る</li>
+                <li>Nの値を入力（4から8がおすすめ）</li>
+                <li>「解を求める」ボタンをクリック</li>
+            </ol>
+        </div>
+
+        <div class="navigation">
+            <a href="/Home/Index" class="nav-button">メインページで実際に試す</a>
+        </div>
+    </div>
+</body>
+</html>

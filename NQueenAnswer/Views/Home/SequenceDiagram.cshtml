@@ -1,0 +1,370 @@
+@{
+    ViewData["Title"] = "Flowchart - N-Queen Problem";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        .sequence-diagram {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .diagram-header {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+        .class-column {
+            text-align: center;
+            min-width: 150px;
+            position: relative;
+        }
+        .class-name {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .lifeline {
+            width: 2px;
+            background-color: #333;
+            height: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+        .sequence-steps {
+            position: relative;
+            min-height: 800px;
+        }
+        .step {
+            position: relative;
+            margin: 30px 0;
+            height: 40px;
+        }
+        .arrow {
+            position: absolute;
+            height: 2px;
+            background-color: #28a745;
+            top: 20px;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #28a745;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        .step-label {
+            position: absolute;
+            background-color: white;
+            padding: 5px 10px;
+            border: 1px solid #28a745;
+            border-radius: 3px;
+            font-size: 12px;
+            white-space: nowrap;
+            top: 5px;
+        }
+        .activation-box {
+            position: absolute;
+            width: 10px;
+            background-color: #ffc107;
+            border: 1px solid #333;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .return-arrow {
+            background-color: #dc3545;
+            border-style: dashed;
+        }
+        .return-arrow::after {
+            border-left-color: #dc3545;
+        }
+        .self-call {
+            background-color: #6f42c1;
+        }
+        .self-call::after {
+            border-left-color: #6f42c1;
+        }
+        .explanation {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        .step-description {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .control-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .control-btn:hover {
+            background-color: #218838;
+        }
+        .control-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>処理フローのフローチャート</h1>
+        
+        <div class="navigation">
+            <a href="/Home/Index" class="nav-button">メインページ</a>
+            <a href="/Home/Tutorial" class="nav-button">チュートリアル</a>
+            <a href="/Home/ClassStructure" class="nav-button">クラス構造</a>
+            <a href="/Home/BruteForceDemo" class="nav-button">アルゴリズムデモ</a>
+        </div>
+
+        <div class="explanation">
+            <h3>フローチャートについて</h3>
+            <p>このフローチャートは、N-Queen問題を解く際の処理の流れを分かりやすく表現しています。</p>
+            <p>開始から終了まで、各処理ステップを順番に追うことができます。</p>
+        </div>
+
+        <div style="display: flex; gap: 20px; margin: 30px 0;">
+            <div class="flowchart" style="flex: 1; padding: 20px; background-color: #f8f9fa; border: 2px solid #007bff; border-radius: 8px; text-align: center;">
+            <!-- 開始 -->
+            <div style="background-color: #28a745; color: white; padding: 15px; border-radius: 50px; margin: 20px auto; width: 150px; font-weight: bold;">
+                開始
+            </div>
+            
+            <!-- 矢印 -->
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- Generate(n)呼び出し -->
+            <div style="background-color: #007bff; color: white; padding: 15px; border-radius: 10px; margin: 20px auto; width: 250px;">
+                Generate(n) 呼び出し
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- ループ開始 -->
+            <div style="background-color: #ffc107; color: black; padding: 15px; border-radius: 10px; margin: 20px auto; width: 300px;">
+                count = 0 から n^n まで繰り返し
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- Chessboard作成 -->
+            <div style="background-color: #17a2b8; color: white; padding: 15px; border-radius: 10px; margin: 20px auto; width: 250px;">
+                new Chessboard(n)
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- Mapping -->
+            <div style="background-color: #17a2b8; color: white; padding: 15px; border-radius: 10px; margin: 20px auto; width: 250px;">
+                Mapping(count)
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- 制約チェック -->
+            <div style="background-color: #fd7e14; color: white; padding: 15px; border-radius: 30px; margin: 20px auto; width: 200px;">
+                制約チェック
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- 判定 -->
+            <div style="background-color: #6f42c1; color: white; padding: 15px; margin: 20px auto; width: 150px; transform: rotate(45deg); position: relative;">
+                <div style="transform: rotate(-45deg);">有効？</div>
+            </div>
+            
+            <!-- Yes/No分岐 -->
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px;">
+                <div style="margin: 0 50px;">
+                    <div style="color: #28a745; font-weight: bold;">Yes</div>
+                    <div style="font-size: 24px; color: #28a745;">↓</div>
+                    <div style="background-color: #28a745; color: white; padding: 10px; border-radius: 10px; width: 120px;">
+                        解に追加
+                    </div>
+                </div>
+                <div style="margin: 0 50px;">
+                    <div style="color: #dc3545; font-weight: bold;">No</div>
+                    <div style="font-size: 24px; color: #dc3545;">↓</div>
+                    <div style="background-color: #dc3545; color: white; padding: 10px; border-radius: 10px; width: 120px;">
+                        破棄
+                    </div>
+                </div>
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- ループ終了判定 -->
+            <div style="background-color: #6f42c1; color: white; padding: 15px; margin: 20px auto; width: 200px; transform: rotate(45deg); position: relative;">
+                <div style="transform: rotate(-45deg);">全パターン<br>完了？</div>
+            </div>
+            
+            <!-- ループバック -->
+            <div style="display: flex; justify-content: center; align-items: center; margin: 20px;">
+                <div style="margin: 0 30px;">
+                    <div style="color: #dc3545; font-weight: bold;">No</div>
+                    <div style="color: #dc3545; font-size: 18px;">← ループに戻る</div>
+                </div>
+                <div style="margin: 0 30px;">
+                    <div style="color: #28a745; font-weight: bold;">Yes</div>
+                    <div style="font-size: 24px; color: #28a745;">↓</div>
+                </div>
+            </div>
+            
+            <!-- 重複除去 -->
+            <div style="background-color: #fd7e14; color: white; padding: 15px; border-radius: 10px; margin: 20px auto; width: 250px;">
+                重複解の除去
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- 結果返却 -->
+            <div style="background-color: #007bff; color: white; padding: 15px; border-radius: 10px; margin: 20px auto; width: 250px;">
+                解のリストを返却
+            </div>
+            
+            <div style="font-size: 24px; color: #007bff; margin: 10px;">↓</div>
+            
+            <!-- 終了 -->
+            <div style="background-color: #dc3545; color: white; padding: 15px; border-radius: 50px; margin: 20px auto; width: 150px; font-weight: bold;">
+                終了
+            </div>
+        </div>
+
+            <div class="step-description" style="flex: 1; padding: 20px; background-color: #fff; border: 2px solid #28a745; border-radius: 8px; max-height: 800px; overflow-y: auto;">
+            <h4>各ステップの詳細解説</h4>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #28a745;">1. 開始</h5>
+                <p>N-Queen問題の解を求める処理を開始します。Nの値（チェス盤のサイズ）が入力として与えられます。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #007bff;">2. Generate(n) 呼び出し</h5>
+                <p>NQueenGeneratorクラスの静的メソッドGenerate(n)が呼び出されます。このメソッドがN-Queen問題の全ての解を生成する中心的な処理です。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #ffc107;">3. ループ開始 (count = 0 から n^n まで)</h5>
+                <p>ブルートフォース法により、n^n通りのすべての配置パターンを生成します。例えば、N=4の場合は4^4=256通りの配置をチェックします。countは現在のシリアル番号を表します。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #17a2b8;">4. new Chessboard(n)</h5>
+                <p>各配置パターンに対して新しいChessboardインスタンスを作成します。このオブジェクトがN×Nのチェス盤を表現し、クイーンの配置情報を管理します。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #17a2b8;">5. Mapping(count)</h5>
+                <p>シリアル番号countを使ってチェス盤にクイーンを配置します。シリアル番号をN進数として解釈し、各桁が各行のクイーンの列位置を表します。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #fd7e14;">6. 制約チェック</h5>
+                <p>配置されたクイーンがN-Queen問題の制約を満たすかチェックします。具体的には、どのクイーンも他のクイーンと同じ行・列・斜め線上にないことを確認します。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #6f42c1;">7. 有効？（判定分岐）</h5>
+                <p>制約チェックの結果を判定します。すべての制約を満たしている場合は「Yes」、制約違反がある場合は「No」に分岐します。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #28a745;">8a. 解に追加 (Yes の場合)</h5>
+                <p>制約を満たす有効な配置の場合、この配置を解のリストに追加します。これがN-Queen問題の解の一つとなります。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #dc3545;">8b. 破棄 (No の場合)</h5>
+                <p>制約違反がある無効な配置の場合、この配置は破棄されます。解のリストには追加されません。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #6f42c1;">9. 全パターン完了？（ループ終了判定）</h5>
+                <p>n^n通りのすべてのパターンをチェックしたかを判定します。まだ未チェックのパターンがある場合は「No」でループに戻り、すべて完了した場合は「Yes」で次のステップに進みます。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #fd7e14;">10. 重複解の除去</h5>
+                <p>見つかった解の中から、回転や反転によって同じになる重複した解を除去します。これにより、本質的に異なる解のみを残します。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #007bff;">11. 解のリストを返却</h5>
+                <p>重複除去後の最終的な解のリストを呼び出し元に返却します。このリストにはN-Queen問題のすべての本質的に異なる解が含まれています。</p>
+            </div>
+            
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h5 style="color: #dc3545;">12. 終了</h5>
+                <p>N-Queen問題の解を求める処理が完了し、結果が返されます。呼び出し元はこの解のリストを使って結果を表示できます。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

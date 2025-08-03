@@ -1,0 +1,522 @@
+@{
+    ViewData["Title"] = "Demo Play - N-Queen Problem";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .navigation {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+        }
+        .demo-controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .control-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+        .control-button:hover {
+            background-color: #218838;
+        }
+        .control-button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .step-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .current-step {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .chessboard-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .chessboard {
+            border: 3px solid #333;
+            margin: 10px;
+        }
+        .chessboard table {
+            border-collapse: collapse;
+        }
+        .chessboard td {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 28px;
+            border: 1px solid #666;
+        }
+        .white {
+            background-color: #f0d9b5;
+        }
+        .black {
+            background-color: #b58863;
+        }
+        .queen {
+            color: #d4af37;
+            font-weight: bold;
+        }
+        .invalid-queen {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .valid-solution {
+            border-color: #28a745 !important;
+            border-width: 4px !important;
+        }
+        .invalid-solution {
+            border-color: #dc3545 !important;
+            border-width: 4px !important;
+        }
+        .algorithm-explanation {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        .step-counter {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>デモプレイページ</h1>
+        
+        <div class="navigation">
+            <a href="/Home/Index" class="nav-button">メインページ</a>
+            <a href="/Home/Tutorial" class="nav-button">チュートリアル</a>
+            <a href="/Home/ClassStructure" class="nav-button">クラス構造</a>
+            <a href="/Home/SequenceDiagram" class="nav-button">フローチャート</a>
+        </div>
+
+        <div class="algorithm-explanation">
+            <h3>ブルートフォース・アルゴリズムとは？</h3>
+            <p>このプログラムでは、総当たり(ブルートフォース)にて有効なパターンをチェックしています。</p>
+            <p>このデモでは、N=4の場合のブルートフォース・アルゴリズムを1ステップずつ確認できます。</p>
+            <p>アルゴリズムは4^4 = 256通りのすべての配置パターンを生成し、各パターンがN-Queen問題の制約を満たすかチェックします。</p>
+        </div>
+
+        <div class="demo-controls">
+            <button class="control-button" id="startBtn" onclick="startDemo()">デモ開始</button>
+            <button class="control-button" id="nextBtn" onclick="nextStep()" disabled>次のステップ</button>
+            <button class="control-button" id="skipBtn" onclick="skipToNextSolution()" disabled>有効な解までスキップ</button>
+            <button class="control-button" id="resetBtn" onclick="resetDemo()">リセット</button>
+        </div>
+
+        <div class="step-info">
+            <div class="current-step" id="stepInfo">デモを開始してください</div>
+            <div class="step-counter" id="stepCounter">ステップ: 0 / 256</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="statistics">
+            <div class="stat-card">
+                <div class="stat-number" id="totalChecked">0</div>
+                <div class="stat-label">チェック済み</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="validSolutions">0</div>
+                <div class="stat-label">有効な解</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="invalidSolutions">0</div>
+                <div class="stat-label">無効な配置</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="currentSerial">0</div>
+                <div class="stat-label">現在のシリアル番号</div>
+            </div>
+        </div>
+
+        <div class="chessboard-container">
+            <div class="chessboard" id="chessboard">
+                <table>
+                    <tr>
+                        <td class="black" id="cell-0-0"></td>
+                        <td class="white" id="cell-1-0"></td>
+                        <td class="black" id="cell-2-0"></td>
+                        <td class="white" id="cell-3-0"></td>
+                    </tr>
+                    <tr>
+                        <td class="white" id="cell-0-1"></td>
+                        <td class="black" id="cell-1-1"></td>
+                        <td class="white" id="cell-2-1"></td>
+                        <td class="black" id="cell-3-1"></td>
+                    </tr>
+                    <tr>
+                        <td class="black" id="cell-0-2"></td>
+                        <td class="white" id="cell-1-2"></td>
+                        <td class="black" id="cell-2-2"></td>
+                        <td class="white" id="cell-3-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="white" id="cell-0-3"></td>
+                        <td class="black" id="cell-1-3"></td>
+                        <td class="white" id="cell-2-3"></td>
+                        <td class="black" id="cell-3-3"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="algorithm-explanation" id="explanation">
+            <h4>現在の状態</h4>
+            <p id="explanationText">デモを開始すると、ここに現在のステップの説明が表示されます。</p>
+            <div id="detailedExplanation" style="margin-top: 15px; display: none;">
+                <h5>詳細説明：</h5>
+                <ul id="explanationDetails">
+                    <li>シリアル番号は、4進数でクイーンの配置を表現します</li>
+                    <li>各桁が各行のクイーンの列位置を示します（0-3）</li>
+                    <li>制約チェックでは、縦・横・斜めの攻撃をチェックします</li>
+                </ul>
+                <div id="constraintDetails" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        let isRunning = false;
+        const totalSteps = 256; // 4^4
+        const N = 4;
+        let validSolutionCount = 0;
+        let invalidSolutionCount = 0;
+
+        // シリアル番号からクイーンの位置を計算
+        function deserializePositions(serialNumber) {
+            const positions = [];
+            for (let row = 0; row < N; row++) {
+                const x = Math.floor(serialNumber / Math.pow(N, row)) % N;
+                positions.push({ x: x, y: row });
+            }
+            return positions;
+        }
+
+        // 配置が有効かチェック
+        function isValidPlacement(positions) {
+            for (let i = 1; i < positions.length; i++) {
+                for (let j = 0; j < i; j++) {
+                    const diff = i - j;
+                    if (positions[i].x === positions[j].x || // 同じ列
+                        positions[i].x === positions[j].x - diff || // 左斜め
+                        positions[i].x === positions[j].x + diff) { // 右斜め
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // チェス盤を更新
+        function updateChessboard(positions, isValid) {
+            // すべてのセルをクリア
+            for (let x = 0; x < N; x++) {
+                for (let y = 0; y < N; y++) {
+                    const cell = document.getElementById(`cell-${x}-${y}`);
+                    cell.innerHTML = '';
+                }
+            }
+
+            // クイーンを配置
+            positions.forEach(pos => {
+                const cell = document.getElementById(`cell-${pos.x}-${pos.y}`);
+                cell.innerHTML = '<span class="' + (isValid ? 'queen' : 'invalid-queen') + '">♛</span>';
+            });
+
+            // チェス盤の境界線を更新
+            const chessboard = document.getElementById('chessboard');
+            chessboard.className = 'chessboard ' + (isValid ? 'valid-solution' : 'invalid-solution');
+        }
+
+        // UI更新
+        function updateUI() {
+            document.getElementById('stepCounter').textContent = `ステップ: ${currentStep} / ${totalSteps}`;
+            document.getElementById('progressBar').style.width = `${(currentStep / totalSteps) * 100}%`;
+            document.getElementById('totalChecked').textContent = currentStep;
+            document.getElementById('validSolutions').textContent = validSolutionCount;
+            document.getElementById('invalidSolutions').textContent = invalidSolutionCount;
+            document.getElementById('currentSerial').textContent = currentStep;
+        }
+
+        // 次のステップ
+        function nextStep() {
+            if (currentStep >= totalSteps) {
+                document.getElementById('stepInfo').textContent = 'デモ完了！';
+                document.getElementById('explanationText').textContent = 
+                    `すべての256通りの配置をチェックしました。有効な解は${validSolutionCount}個見つかりました。`;
+                return;
+            }
+
+            const positions = deserializePositions(currentStep);
+            const isValid = isValidPlacement(positions);
+            
+            if (isValid) {
+                validSolutionCount++;
+            } else {
+                invalidSolutionCount++;
+            }
+
+            updateChessboard(positions, isValid);
+            
+            document.getElementById('stepInfo').textContent = 
+                `シリアル番号 ${currentStep}: ${isValid ? '有効な解' : '無効な配置'}`;
+            
+            updateDetailedExplanation(currentStep, positions, isValid);
+
+            currentStep++;
+            updateUI();
+
+            if (currentStep >= totalSteps) {
+                document.getElementById('nextBtn').disabled = true;
+                document.getElementById('skipBtn').disabled = true;
+            }
+        }
+
+        // 有効な解までスキップ
+        function skipToNextSolution() {
+            if (currentStep >= totalSteps) {
+                document.getElementById('stepInfo').textContent = 'デモ完了！';
+                document.getElementById('explanationText').textContent = 
+                    `すべての256通りの配置をチェックしました。有効な解は${validSolutionCount}個見つかりました。`;
+                return;
+            }
+
+            // 現在のステップから有効な解を探す
+            let foundSolution = false;
+            while (currentStep < totalSteps && !foundSolution) {
+                const positions = deserializePositions(currentStep);
+                const isValid = isValidPlacement(positions);
+                
+                if (isValid) {
+                    validSolutionCount++;
+                    foundSolution = true;
+                } else {
+                    invalidSolutionCount++;
+                }
+
+                currentStep++;
+            }
+
+            if (foundSolution) {
+                // 見つかった有効な解を表示
+                const positions = deserializePositions(currentStep - 1);
+                updateChessboard(positions, true);
+                
+                document.getElementById('stepInfo').textContent = 
+                    `シリアル番号 ${currentStep - 1}: 有効な解が見つかりました！`;
+                
+                const positionText = positions.map(p => `(${p.x},${p.y})`).join(', ');
+                document.getElementById('explanationText').textContent = 
+                    `シリアル番号 ${currentStep - 1} をデシリアライズ: ${positionText}. ` +
+                    `制約チェック結果: ✓ 有効 - この配置ではクイーン同士が攻撃し合いません！`;
+            } else {
+                document.getElementById('stepInfo').textContent = 'デモ完了！';
+                document.getElementById('explanationText').textContent = 
+                    `すべての256通りの配置をチェックしました。有効な解は${validSolutionCount}個見つかりました。`;
+            }
+
+            updateUI();
+
+            if (currentStep >= totalSteps) {
+                document.getElementById('nextBtn').disabled = true;
+                document.getElementById('skipBtn').disabled = true;
+            }
+        }
+
+        // デモ開始
+        function startDemo() {
+            isRunning = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('skipBtn').disabled = false;
+            document.getElementById('stepInfo').textContent = 'デモ実行中...';
+        }
+
+        // リセット
+        function resetDemo() {
+            currentStep = 0;
+            validSolutionCount = 0;
+            invalidSolutionCount = 0;
+            isRunning = false;
+            
+            // チェス盤をクリア
+            for (let x = 0; x < N; x++) {
+                for (let y = 0; y < N; y++) {
+                    const cell = document.getElementById(`cell-${x}-${y}`);
+                    cell.innerHTML = '';
+                }
+            }
+            
+            document.getElementById('chessboard').className = 'chessboard';
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('skipBtn').disabled = true;
+            document.getElementById('stepInfo').textContent = 'デモを開始してください';
+            document.getElementById('explanationText').textContent = 'デモを開始すると、ここに現在のステップの説明が表示されます。';
+            
+            updateUI();
+        }
+
+        // 詳細説明を更新
+        function updateDetailedExplanation(serialNumber, positions, isValid) {
+            const positionText = positions.map(p => `(${p.x},${p.y})`).join(', ');
+            
+            // 基本説明
+            document.getElementById('explanationText').textContent = 
+                `シリアル番号 ${serialNumber} をデシリアライズ: ${positionText}. ` +
+                `制約チェック結果: ${isValid ? '✓ 有効' : '✗ 無効'}`;
+            
+            // 詳細説明を表示
+            document.getElementById('detailedExplanation').style.display = 'block';
+            
+            // シリアル番号の4進数表現を計算
+            const base4 = serialNumber.toString(4).padStart(4, '0');
+            const explanationDetails = document.getElementById('explanationDetails');
+            explanationDetails.innerHTML = `
+                <li><strong>シリアル番号:</strong> ${serialNumber} (10進数) = ${base4} (4進数)</li>
+                <li><strong>デシリアライズ:</strong> 各桁が各行のクイーンの列位置を表します</li>
+                <li><strong>配置:</strong> ${positions.map((p, i) => `行${i}: 列${p.x}`).join(', ')}</li>
+                <li><strong>制約チェック:</strong> ${isValid ? '全ての制約を満たしています' : '制約違反があります'}</li>
+            `;
+            
+            // 制約の詳細チェック結果
+            const constraintDetails = document.getElementById('constraintDetails');
+            if (!isValid) {
+                const conflicts = [];
+                for (let i = 1; i < positions.length; i++) {
+                    for (let j = 0; j < i; j++) {
+                        const diff = i - j;
+                        if (positions[i].x === positions[j].x) {
+                            conflicts.push(`行${j}と行${i}のクイーンが同じ列${positions[i].x}にいます`);
+                        } else if (positions[i].x === positions[j].x - diff) {
+                            conflicts.push(`行${j}と行${i}のクイーンが左斜めライン上にいます`);
+                        } else if (positions[i].x === positions[j].x + diff) {
+                            conflicts.push(`行${j}と行${i}のクイーンが右斜めライン上にいます`);
+                        }
+                    }
+                }
+                constraintDetails.innerHTML = `
+                    <div style="background-color: #f8d7da; padding: 10px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                        <strong>制約違反の詳細:</strong>
+                        <ul style="margin: 5px 0;">
+                            ${conflicts.map(conflict => `<li>${conflict}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } else {
+                constraintDetails.innerHTML = `
+                    <div style="background-color: #d4edda; padding: 10px; border-radius: 5px; border-left: 4px solid #28a745;">
+                        <strong>✓ 有効な解:</strong> すべてのクイーンが互いに攻撃し合わない位置に配置されています。
+                    </div>
+                `;
+            }
+        }
+
+        // 初期化
+        updateUI();
+    </script>
+</body>
+</html>

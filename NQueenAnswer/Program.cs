@@ -1,40 +1,35 @@
-﻿using System.Diagnostics;
-using System.Drawing;
-using System.Text;
-
-namespace NQueenAnswer {
-
-    /// <summary>
-    /// メイン処理を行うクラス
-    /// </summary>
-    public class Program {
-        //解の個数
-        //N=4 → 2, N=5 → 10, N=6 → 4, N=7 → 40, N=8 → 92
-
-        //クイーンの個数
-        const int N = 5;
-
-        static void Main()
+﻿namespace NQueenAnswer
+{
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            var builder = WebApplication.CreateBuilder(args);
 
-            Console.WriteLine("N = " + N + "のときのクイーンの配置");
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
 
-            //全ての座標の組合わせを生成する。
-            var solutionList = NQueenGenerator.Generate(N);
+            var app = builder.Build();
 
-            //解を出力する。
-            ChessboardDebugPrinter.PrintAll(solutionList);
+            // Configure the HTTP request pipeline.
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
 
-            sw.Stop();
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-            Console.WriteLine("経過時間: " + sw.Elapsed.ToString("hh':'mm':'ss'.'fff"));
+            app.UseRouting();
 
-            //重複を削除した場合
-            Console.WriteLine();
-            Console.WriteLine("重複を削除した場合");
-            ChessboardDebugPrinter.PrintAll(NQueenGenerator.DeleteDuplicate(solutionList));
+            app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.Run();
         }
     }
 }
